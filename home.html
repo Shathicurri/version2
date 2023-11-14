@@ -48,6 +48,7 @@
             <form onsubmit="checkPassword(event)">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
+                <div class="error-message" id="errorMessage"></div>
                 <br>
                 <button type="submit">Login</button>
             </form>
@@ -57,16 +58,29 @@
     <script>
         async function checkPassword(event) {
             event.preventDefault();
-
+            const validCharacters = /^[ -~]+$/;
             const inputPassword = document.getElementById('password').value;
             
             // Fetch the content of the text file (replace 'yourfile.txt' with the actual file path)
             const response = await fetch('10-million-password-list-top-1000.txt');
             const fileContent = await response.text();
+            const errorMessageElement = document.getElementById('errorMessage');
+            
+            // Check if the input password is at least 10 characters
+            if (inputPassword.length < 10) {
+                errorMessageElement.textContent = 'Password must be at least 10 characters.';
+                return; // Stop further execution
+            }
+            if (!validCharacters.test(inputPassword)) {
+                errorMessageElement.textContent = 'Invalid characters in the password.';
+                return; // Stop further execution
+            } else {
+                errorMessageElement.textContent = ''; // Clear any previous error message
+            }
             // Check if the input password appears in the text file
             if (fileContent.includes(inputPassword)) {
-                document.getElementById('password').value = '';
-                
+                errorMessageElement.textContent = 'Password found in common passwords.';
+                return;
             } else {
                 // Store the password in sessionStorage
                 sessionStorage.setItem('password', inputPassword);
