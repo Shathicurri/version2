@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+</head>
+<body>
+
+  <h2>Login</h2>
+
+  <form id="loginForm" method="GET" onsubmit="return checkValue()">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <script>
+    function checkValue() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const valueToCheck = document.getElementById('valueToCheck').value;
+
+      // Load the text file
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', '10-million-password-list-top-1000.txt', true);
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          const fileContent = xhr.responseText;
+
+          // Check if the value exists in the file
+          if (fileContent.includes(valueToCheck)) {
+            alert('Value found in the text file!');
+          } else {
+            alert('Value not found in the text file.');
+          }
+        }
+      };
+
+      xhr.send();
+    }
+  </script>
+
+</body>
+</html>
